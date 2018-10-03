@@ -3,6 +3,7 @@ package com.example.springBatch.jobs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -10,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
 import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.CassandraTemplate;
+import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
 import com.datastax.driver.core.policies.DowngradingConsistencyRetryPolicy;
 import com.datastax.driver.core.policies.ExponentialReconnectionPolicy;
@@ -20,7 +22,7 @@ import com.example.springBatch.properties.PropertyKeys;
 
 @Configuration
 @PropertySource(value = {"classpath:application.properties"})
-//@EnableCassandraRepositories
+@EnableCassandraRepositories
 public class CassandraConfiguration  extends AbstractCassandraConfiguration {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CassandraConfiguration.class);
@@ -29,25 +31,38 @@ public class CassandraConfiguration  extends AbstractCassandraConfiguration {
 	@Autowired
 	private Environment propertyEnvironment;
 	
+	
+	@Value("${spring.data.cassandra.keyspace-name}")
+	private String keyspaceName;
+	
+	@Value("${spring.data.cassandra.contact-points}")
+	private String contactPoints;
+	
+	@Value("${spring.data.cassandra.port}")
+	private String port;
+	
+	
+	@Value("${spring.data.cassandra.schema-action}")
+	private String schemaAction;
 
     @Override
     protected String getKeyspaceName() {
-        return propertyEnvironment.getProperty(PropertyKeys.CASSANDRA_KEYSPACE);
+    	return keyspaceName;
     }
 
     @Override
     protected String getContactPoints() {
-        return propertyEnvironment.getProperty(PropertyKeys.CASSANDRA_CONTACT_POINTS);
+    	return contactPoints;
     }
 
     @Override
     protected int getPort() {
-        return Integer.parseInt(propertyEnvironment.getProperty(PropertyKeys.CASSANDRA_PORT));
+        return Integer.parseInt(port);
     }
 
     @Override
     public SchemaAction getSchemaAction() {
-        return SchemaAction.valueOf(propertyEnvironment.getProperty(PropertyKeys.CASSANDRA_SCHEMA_ACTION).toUpperCase());
+        return SchemaAction.valueOf(schemaAction.toUpperCase());
     }
 
     @Override

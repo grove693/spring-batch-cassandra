@@ -7,15 +7,16 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.cassandra.core.CassandraTemplate;
+import com.example.springBatch.model.Person;
 
-public class CassandraBatchItemWriter<Person> implements ItemWriter<Person>, InitializingBean {
+import com.example.springBatch.service.PersonService;
+
+public class CassandraBatchItemWriter<Person> implements ItemWriter<com.example.springBatch.model.Person>, InitializingBean {
 	
 	  protected static final Log logger = LogFactory.getLog(CassandraBatchItemWriter.class);
 	    private final Class<Person> aClass;
 	    @Autowired
-	    private CassandraTemplate cassandraTemplate;
-
+	    private PersonService personService;
 	    @Override
 	    public void afterPropertiesSet() throws Exception { }
 
@@ -24,12 +25,12 @@ public class CassandraBatchItemWriter<Person> implements ItemWriter<Person>, Ini
 	    }
 
 	    @Override
-	    public void write(final List<? extends Person> items) throws Exception {
+	    public void write(final List<? extends com.example.springBatch.model.Person> items) throws Exception {
 	        logger.debug("Write operations is performing, the size is {}" + items.size());
 	        if (!items.isEmpty()) {
 	            logger.info("Inserting in a batch performing...");
-	            for (Person entity : items) {
-	            	cassandraTemplate.insert(entity);
+	            for (com.example.springBatch.model.Person entity : items) {
+	            	personService.saveEntity(entity);
 	            }
 	            
 	        }
