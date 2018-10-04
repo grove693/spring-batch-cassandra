@@ -1,4 +1,4 @@
-package com.example.springBatch.jobs;
+package com.example.springBatch.jobs.writers;
 
 import java.util.List;
 
@@ -11,16 +11,16 @@ import com.example.springBatch.model.Person;
 
 import com.example.springBatch.service.PersonService;
 
-public class CassandraBatchItemWriter<Person> implements ItemWriter<com.example.springBatch.model.Person>, InitializingBean {
+public class PersonCassandraBatchItemWriter<Person> implements ItemWriter<com.example.springBatch.model.Person>, InitializingBean {
 	
-	  protected static final Log logger = LogFactory.getLog(CassandraBatchItemWriter.class);
+	  protected static final Log logger = LogFactory.getLog(PersonCassandraBatchItemWriter.class);
 	    private final Class<Person> aClass;
 	    @Autowired
 	    private PersonService personService;
 	    @Override
 	    public void afterPropertiesSet() throws Exception { }
 
-	    public CassandraBatchItemWriter(final Class<Person> aClass) {
+	    public PersonCassandraBatchItemWriter(final Class<Person> aClass) {
 	        this.aClass = aClass;
 	    }
 
